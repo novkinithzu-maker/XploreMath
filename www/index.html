@@ -15,11 +15,6 @@ input { user-select: text; -webkit-user-select: text; }
 #app { position: fixed; left: 0; top: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 body.touch.portrait.playing #box { margin: auto 0; }   /* portrait phones: game sits centred in the space above the buttons */
 #box  { overflow: hidden; flex: none; }
-/* Surround: the wall / floor of the current hallway or classroom carries on past the picture, so the sides are never plain */
-#sur { display: none; position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-body.playing #sur { display: block; }
-#sur > div { position: absolute; left: 0; right: 0; z-index: -1; image-rendering: pixelated; background-repeat: repeat; }
-body.playing #box { box-shadow: 0 0 0 3px #1a1c2c, 0 0 22px 8px rgba(10,14,30,.4); }
 #game { position: relative; width: 320px; height: 214px; overflow: hidden; transform-origin: 0 0; font-size: 8px; line-height: 1.3;
         image-rendering: pixelated; background: #0b0f1a; }
 #bg { position: absolute; inset: 0; background-size: cover; background-position: center; image-rendering: pixelated; }
@@ -261,11 +256,10 @@ body.onmenu #box { display: none; }
 #cardInfo .bar i { height: 6px; }
 
 /* Key hint (bottom right) and the quiz Back button */
-#menuKeyBtn { position: absolute; right: 4px; top: 3px; width: 62px; height: 13px; padding: 0; line-height: 9px; font-size: 8px; font-weight: bold; letter-spacing: 1px; z-index: 3100; cursor: pointer;
-              background: #ffe100; color: #1b1405; border-color: #fff7a8; }
-#menuKeyBtn::after { content: ""; position: absolute; inset: -5px -4px -6px -6px; }   /* bigger invisible tap area for thumbs */   /* z-index above the quiz so MENU works in quizzes too */
+#menuKeyBtn { position: absolute; right: 4px; top: 3px; width: 62px; height: 13px; padding: 0; line-height: 9px; font-size: 8px; font-weight: bold; letter-spacing: 1px; z-index: 3100; cursor: pointer; }   /* z-index above the quiz so MENU works in quizzes too */
 #game.flexq:has(#quiz.on) #menuKeyBtn { top: auto; bottom: 4px; }   /* narrow PC window: keep MENU clear of the quiz Back button */
-#menuKeyBtn:hover, #menuKeyBtn:active, #menuKeyBtn:focus-visible { background: #fff04d; color: #1b1405; border-color: #ffffff; }
+#menuKeyBtn:hover, #menuKeyBtn:focus-visible { background: #f2c230; color: #1b1405; border-color: #ffe3a0; }
+@media (pointer: coarse) { #menuKeyBtn { display: none !important; } }   /* touch screens already have the on-screen Menu button */
 .netBadge { display: none; position: absolute; left: 6px; top: 3px; box-sizing: border-box; height: 13px; padding: 0 4px; font-family: inherit; font-weight: bold; font-size: 8px; line-height: 11px; letter-spacing: .5px; color: #1b1b1b; background: #ffb347; border: 1px solid #7a4a00; z-index: 2001; pointer-events: none; }
 .netBadge.on { display: block; }
 #netBadgeMenu { left: 12px; top: 12px; height: 24px; padding: 0 10px; font-size: 14px; line-height: 22px; border-width: 2px; }
@@ -275,25 +269,25 @@ body.onmenu #box { display: none; }
 #qBack { position: absolute; right: 6px; top: 3px; width: 46px; height: 17px; }
 
 /* On-screen buttons (touch devices): floating in landscape, in their own area under the game in portrait */
-#controls { display: none; pointer-events: none; justify-content: space-between; align-items: flex-end; touch-action: none; --bs: clamp(46px, 14vh, 62px); }
+#controls { display: none; pointer-events: none; justify-content: space-between; align-items: flex-end; touch-action: none; --bs: clamp(38px, 11vh, 52px); }
 #controls > * { pointer-events: auto; }
 body.touch.playing #controls { display: flex; }
-body.touch.landscape #controls { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 4px calc(12px + env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left)); }
-body.touch.landscape #controls > * { opacity: .92; }
+body.touch.landscape #controls { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 4px 8px calc(4px + env(safe-area-inset-bottom)); }
+body.touch.landscape #controls > * { opacity: .7; }
 body.touch.portrait #controls { position: relative; width: 100%; flex: none; align-items: center; padding: 8px 14px calc(8px + env(safe-area-inset-bottom)); gap: 12px; }
 body.flexquiz #controls { display: none !important; }
-.dpad { display: grid; grid-template-columns: repeat(3, var(--bs)); grid-template-rows: repeat(2, var(--bs)); gap: 6px; }
-.dpad .px { font-size: 22px; border-width: 3px; touch-action: none; user-select: none; -webkit-user-select: none; }
+.dpad { display: grid; grid-template-columns: repeat(3, var(--bs)); grid-template-rows: repeat(2, var(--bs)); gap: 4px; }
+.dpad .px { font-size: 12px; touch-action: none; user-select: none; -webkit-user-select: none; }
 .dpad [data-key=up]    { grid-column: 2; grid-row: 1; }
 .dpad [data-key=left]  { grid-column: 1; grid-row: 2; }
 .dpad [data-key=down]  { grid-column: 2; grid-row: 2; }
 .dpad [data-key=right] { grid-column: 3; grid-row: 2; }
-.rside { display: flex; flex-direction: column; gap: 8px; width: var(--rw, 140px); min-width: 0; }
+.rside { display: flex; flex-direction: column; gap: 6px; width: 120px; min-width: 0; }
 body.touch.portrait .rside { flex: 1; width: auto; max-width: 220px; }
-#controls .px { font-size: 15px; }
+#controls .px { font-size: 11px; }
 #actBtn { height: calc(var(--bs) + 6px); line-height: 1.15; padding: 2px 6px; background: #f2c230; color: #1b1405; border-color: #ffe3a0; }
 #actBtn:disabled { background: #2a3a5c; color: #7f93b3; border-color: #43515e; }
-
+#menuBtn { height: max(32px, calc(var(--bs) - 4px)); }
 #qPanel { display: flex; flex-direction: column; }
 #qOptions { flex: 1; min-height: 0; overflow-y: auto; touch-action: pan-y; }
 #solBody { touch-action: pan-y; }
@@ -348,7 +342,6 @@ body.touch.portrait .rside { flex: 1; width: auto; max-width: 220px; }
 
 <body>
 <div id="app">
- <div id="sur" aria-hidden="true"><div id="surTop"></div><div id="surMid"></div><div id="surBot"></div></div>
  <div id="box">
   <div id="game">
    <div id="bg"></div>
@@ -517,6 +510,7 @@ body.touch.portrait .rside { flex: 1; width: auto; max-width: 220px; }
    </div>
    <div class="rside">
      <button class="px" id="actBtn" disabled>Walk to a door</button>
+     <button class="px" id="menuBtn">Menu</button>
    </div>
  </div>
 </div>
@@ -1619,49 +1613,28 @@ const SK = {
   tank: (F, w, h) => { bev(F, w, h, '#2f8fd0', '#5a3018'); F('#6bb8f0', 2, 2, w - 4, 2); F('#f8b830', 5, 6, 4, 2); F('#f8b830', 9, 7, 1, 1); F('#d94f9a', w - 9, 8, 3, 2); F('#fff', 4, 3, 1, 1); F('#e6d3a3', 1, h - 3, w - 2, 2); }
 };
 const hx = (x, y) => (x * 73 + y * 151 + ((x * y) % 17)) % 11;
-function paintWall(F, t, H) {                         // wall pattern only (H rows), used for the surround
-  F(t.wall, 0, 0, 320, H);
-  for (let y = 0; y < H; y += 8) for (let x = 0; x < 320; x += 8) {
-    if (t.pat === 'brick') { F(lite(t.wall, -20), x, y + 7, 8, 1); F(lite(t.wall, -20), x + ((y / 8) % 2 ? 0 : 4), y, 1, 7); }
-    else if (t.pat === 'dots') F(lite(t.wall, -18), x + 3, y + 3, 2, 2);
-    else if (t.pat === 'stripe') F(lite(t.wall, -14), x, y, 2, 8);
-    else if (t.pat === 'stars') { if (hx(x, y) % 4 === 0) F('#fff', x + hx(y, x) % 6, y + hx(x, y) % 6); }
-    else if ((x / 8 + y / 8) % 2 === 0) F(lite(t.wall, -12), x, y, 8, 8);
-  }
-}
-function paintFloor(F, t, H) {                        // floor pattern only (H rows from the top of the floor), used for the surround
-  const [a, b] = [t.t1, t.t2];
-  if (t.ft === 'plank') for (let r = 0, y = 0; y < H; r++, y += 7) { const c = r % 2 ? a : b; F(c, 0, y, 320, 7); F(lite(c, -34), 0, y, 320, 1);
-    for (let x = (r * 37) % 53; x < 320; x += 53) F(lite(c, -34), x, y, 1, 7); }
-  else if (t.ft === 'carpet') { F(a, 0, 0, 320, H); for (let y = 0; y < H; y++) for (let x = 0; x < 320; x++) if (hx(x, y + 122) === 0) F(b, x, y); }
-  else for (let r = 0, y = 0; y < H; r++, y += 14) for (let c = 0, x = 0; x < 320; c++, x += 16) { const col = (r + c) % 2 ? a : b;
-    F(col, x, y, 16, 14); F(lite(col, -26), x, y, 16, 1); F(lite(col, -26), x, y, 1, 14); F(lite(col, 22), x + 1, y + 1, 5, 1); }
-}
-let curBgT = null, SURG = null;
-function updateSur() {                                // lay the wall / floor art around the picture, lined up with it pixel for pixel
-  if (!curBgT || !SURG || !state.playing) return;
-  const t = curBgT, g = SURG, S = g.s, x = g.x, y = g.y, h = g.h;
-  const top = $('surTop'), mid = $('surMid'), bot = $('surBot');
-  top.style.top = '0'; top.style.height = Math.max(0, y) + 'px';
-  top.style.background = t.wall + ' url(' + t._wt + ') ' + x + 'px ' + y + 'px / ' + 320 * S + 'px ' + 32 * S + 'px repeat';
-  mid.style.top = y + 'px'; mid.style.height = h + 'px';
-  mid.style.background = 'url(' + t._u + ') ' + x + 'px 0 / ' + 320 * S + 'px ' + 214 * S + 'px repeat-x';
-  bot.style.top = (y + h) + 'px'; bot.style.bottom = '0';
-  bot.style.background = (t.t1 || t.wall) + ' url(' + t._ft + ') ' + x + 'px ' + (122 * S - h) + 'px / ' + 320 * S + 'px ' + 28 * S + 'px repeat';
-}
 function setBg(t) {                                   // draws a whole room: wall pattern, wainscot band, floor
   if (!t._u) t._u = cv(320, 214, F => {
-    paintWall(F, t, 100);
+    F(t.wall, 0, 0, 320, 100);
+    for (let y = 0; y < 100; y += 8) for (let x = 0; x < 320; x += 8) {
+      if (t.pat === 'brick') { F(lite(t.wall, -20), x, y + 7, 8, 1); F(lite(t.wall, -20), x + ((y / 8) % 2 ? 0 : 4), y, 1, 7); }
+      else if (t.pat === 'dots') F(lite(t.wall, -18), x + 3, y + 3, 2, 2);
+      else if (t.pat === 'stripe') F(lite(t.wall, -14), x, y, 2, 8);
+      else if (t.pat === 'stars') { if (hx(x, y) % 4 === 0) F('#fff', x + hx(y, x) % 6, y + hx(x, y) % 6); }
+      else if ((x / 8 + y / 8) % 2 === 0) F(lite(t.wall, -12), x, y, 8, 8);
+    }
     F(lite(t.wall, 30), 0, 96, 320, 2); F(lite(t.wall, -40), 0, 98, 320, 2);
     F(t.band, 0, 100, 320, 22); F(lite(t.band, 45), 0, 100, 320, 2); F(lite(t.band, -45), 0, 119, 320, 3);
     for (let x = 0; x < 320; x += 16) F(lite(t.band, -28), x, 103, 1, 15);
-    paintFloor((col, x, y, w, h) => F(col, x, y + 122, w, h), t, 92);   // the floor, drawn below the wall band
+    const [a, b] = [t.t1, t.t2];
+    if (t.ft === 'plank') for (let r = 0, y = 122; y < 214; r++, y += 7) { const c = r % 2 ? a : b; F(c, 0, y, 320, 7); F(lite(c, -34), 0, y, 320, 1);
+      for (let x = (r * 37) % 53; x < 320; x += 53) F(lite(c, -34), x, y, 1, 7); }
+    else if (t.ft === 'carpet') { F(a, 0, 122, 320, 92); for (let y = 122; y < 214; y++) for (let x = 0; x < 320; x++) if (hx(x, y) === 0) F(b, x, y); }
+    else for (let r = 0, y = 122; y < 214; r++, y += 14) for (let c = 0, x = 0; x < 320; c++, x += 16) { const col = (r + c) % 2 ? a : b;
+      F(col, x, y, 16, 14); F(lite(col, -26), x, y, 16, 1); F(lite(col, -26), x, y, 1, 14); F(lite(col, 22), x + 1, y + 1, 5, 1); }
     F('#2a2030', 0, 122, 320, 2);
   });
-  if (!t._wt) { t._wt = cv(320, 32, F => paintWall(F, t, 32)); t._ft = cv(320, 28, F => paintFloor(F, t, 28)); }
   $('bg').style.backgroundImage = 'url(' + t._u + ')';
-  curBgT = t; updateSur();
-  const bst = document.body.style; bst.setProperty('--bgWall', t.wall); bst.setProperty('--bgBand', t.band); bst.setProperty('--bgFloor', t.t1 || t.wall);
 }
 /* Hallway look per floor, and 12 unique classroom designs (colours, floor type, rug, desk layout, wall + floor decorations).
    Decoration entries: [sprite, x, bottomY, w, h] - w/h only for the big procedural ones (shelf, tank). */
@@ -3380,6 +3353,7 @@ document.querySelectorAll('[data-key]').forEach(button => {
     button.addEventListener(type, () => keys[key] = false));
 });
 $('actBtn').addEventListener('pointerdown', e => { e.preventDefault(); doAction(); });
+$('menuBtn').addEventListener('pointerdown', e => { e.preventDefault(); goTo('menu'); });
 $('menuKeyBtn').addEventListener('click', e => {         // PC MENU button: straight back to the Main Menu from anywhere (walking, talking, mid-quiz)
   e.currentTarget.blur(); beep(660, 0.1);
   if (state.quiz) closeQuiz(true);                         // a half-finished quiz is saved as a FAILED attempt, exactly like the Back button
@@ -3445,28 +3419,21 @@ function fit() {
   } else {
     let room = 0;
     if (touch && port && state.playing) {            // portrait phones keep a strip under the game for the buttons
-      const bs = Math.max(48, Math.min(68, (W * 0.56 - 16) / 3));
+      const bs = Math.max(40, Math.min(60, (W * 0.5 - 16) / 3));
       $('controls').style.setProperty('--bs', bs + 'px');
       room = $('controls').offsetHeight + 8;
     } else $('controls').style.removeProperty('--bs');
-    $('controls').style.removeProperty('--rw');
     scale = snap(Math.min(W / 320, Math.max(40, H - room) / 214));
     if (touch && !port && state.playing) {          // sideways phones: put the buttons in the side margins if that keeps the picture big
-      const bs = Math.max(46, Math.min(62, H * 0.14)), rw = Math.max(110, Math.min(150, bs * 2.4)), gutter = Math.max(3 * bs + 12 + 28, rw + 28);
-      $('controls').style.setProperty('--bs', bs + 'px'); $('controls').style.setProperty('--rw', rw + 'px');
+      const bs = Math.max(38, Math.min(52, H * 0.11)), gutter = Math.max(3 * bs + 20, 132);
       const inGutters = snap(Math.min((W - 2 * gutter) / 320, H / 214));
-      if (inGutters >= scale * 0.75) scale = inGutters;
+      if (inGutters >= scale * 0.8) scale = inGutters;
     }
     bw = 320 * scale; bh = 214 * scale;
   }
   game.style.width = lw + 'px'; game.style.height = lh + 'px';
   box.style.width = bw + 'px'; box.style.height = bh + 'px';
   game.style.transform = 'scale(' + scale + ')';
-  if (state.playing && !isUI && !flexQ) {              // where the picture ended up: the surround art is lined up to it
-    const r = box.getBoundingClientRect(), ar = $('app').getBoundingClientRect();
-    SURG = { x: r.left - ar.left, y: r.top - ar.top, s: scale, h: bh };
-    updateSur();
-  }
 }
 addEventListener('resize', fit);
 addEventListener('orientationchange', () => setTimeout(fit, 150));
